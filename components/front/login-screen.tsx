@@ -94,7 +94,7 @@ export default function LoginScreen() {
     try {
       setLoading(true);
       const res = await loginAction(data);
-      if ((res && res.status == 500) || 409) {
+      if (res && res.status == 500 && 409) {
         setErr("Wrong password, please try again.");
       }
       reset();
