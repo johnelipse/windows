@@ -102,7 +102,7 @@ export async function loginAction(data: LoginProps) {
   const newEmail = email.email;
 
   if (!email) {
-    return { error: "Please start the SignUp process again" };
+    return { error: "Please start the SignUp process again", status: 409 };
   }
 
   try {
