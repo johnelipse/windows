@@ -98,16 +98,15 @@ export async function getUser() {
 }
 
 export async function loginAction(data: LoginProps) {
-  const { password } = data;
-  const email = await getUserEmail();
-  const newEmail = email.email;
-
-  if (!email) {
-    toast.error("Please start with the SignUp process...");
-    return { error: "Please start the SignUp process again", status: 409 };
-  }
-
   try {
+    const { password } = data;
+    const email = await getUserEmail();
+    const newEmail = email.email;
+
+    if (!email) {
+      return { error: "Please start the SignUp process again", status: 409 };
+    }
+
     const user = await db.user.findUnique({
       where: { email: newEmail },
     });
@@ -134,6 +133,7 @@ export async function loginAction(data: LoginProps) {
       }
     );
   } catch (error) {
+    toast.error("Please start with the SignUp process...");
     console.error("Login failed:", error);
     return { error: "An error occurred during login. Please try again." };
   }
