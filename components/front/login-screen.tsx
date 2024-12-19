@@ -51,14 +51,15 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Loader2, Lock, Moon, Power, RotateCcw } from "lucide-react";
 import SignupScreen from "./signup-screen";
 import PasswordInput from "../formInputs/passwordInput";
 import { useForm } from "react-hook-form";
-import { loginAction } from "@/actions/userActions";
+import { getUser, loginAction } from "@/actions/userActions";
 import Desktop from "./desktop";
+import toast from "react-hot-toast";
 
 export type LoginProps = {
   get: any;
@@ -77,6 +78,21 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [openDesktop, setOpenDesktop] = useState(false);
+  const [newData, setNewData] = useState({});
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userCookie = await getUser();
+        if (userCookie) {
+          setNewData(userCookie);
+        }
+      } catch (error) {
+        console.error("Error fetching or parsing user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   if (openSignup) {
     return <SignupScreen />;
@@ -91,18 +107,22 @@ export default function LoginScreen() {
   }
 
   async function submit(data: LoginProps) {
-    try {
-      setLoading(true);
-      const res = await loginAction(data);
-      if (res && res.status == 500 && 409) {
-        setErr("Wrong password, please try again.");
+    if (newData) {
+      try {
+        setLoading(true);
+        const res = await loginAction(data);
+        if (res && res.status == 500) {
+          setErr("Wrong password, please try again.");
+        }
+        reset();
+        setOpenDesktop(true);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-      reset();
-      setOpenDesktop(true);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Please start with the SignUp process...");
     }
   }
 

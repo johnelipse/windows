@@ -5,7 +5,6 @@ import { FormDataProps } from "@/components/front/signup-screen";
 import { db } from "@/lib/db";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import toast from "react-hot-toast";
 
 export async function createUser(formData: FormDataProps) {
   try {
@@ -133,7 +132,6 @@ export async function loginAction(data: LoginProps) {
       }
     );
   } catch (error) {
-    toast.error("Please start with the SignUp process...");
     console.error("Login failed:", error);
     return { error: "An error occurred during login. Please try again." };
   }
