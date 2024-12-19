@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 
-interface PinnedApp {
-  name: string;
-  icon: string;
-}
+// interface PinnedApp {
+//   name: string;
+//   icon: string;
+// }
 
 interface RecommendedItem {
   icon: string;
@@ -22,34 +22,34 @@ interface RecommendedItem {
   type: "link" | "app" | "file" | "folder";
 }
 
-const pinnedApps: PinnedApp[] = [
-  {
-    name: "Github",
-    icon: "https://cdn-icons-png.flaticon.com/128/733/733609.png",
-  },
-  { name: "VSCode", icon: "/vscode.svg" },
-  { name: "Figma", icon: "/image.png" },
-  {
-    name: "Photoshop",
-    icon: "https://cdn-icons-png.flaticon.com/128/5968/5968520.png",
-  },
-  {
-    name: "Firefox",
-    icon: "https://cdn-icons-png.flaticon.com/128/5968/5968827.png",
-  },
-  {
-    name: "Chrome",
-    icon: "https://cdn-icons-png.flaticon.com/128/888/888846.png",
-  },
-  {
-    name: "Edge",
-    icon: "https://cdn-icons-png.flaticon.com/128/5968/5968890.png",
-  },
-  {
-    name: "Zoom",
-    icon: "https://cdn-icons-png.flaticon.com/128/4423/4423709.png",
-  },
-];
+// const pinnedApps: PinnedApp[] = [
+//   {
+//     name: "Github",
+//     icon: "https://cdn-icons-png.flaticon.com/128/733/733609.png",
+//   },
+//   { name: "VSCode", icon: "/vscode.svg" },
+//   { name: "Figma", icon: "/image.png" },
+//   {
+//     name: "Photoshop",
+//     icon: "https://cdn-icons-png.flaticon.com/128/5968/5968520.png",
+//   },
+//   {
+//     name: "Firefox",
+//     icon: "https://cdn-icons-png.flaticon.com/128/5968/5968827.png",
+//   },
+//   {
+//     name: "Chrome",
+//     icon: "https://cdn-icons-png.flaticon.com/128/888/888846.png",
+//   },
+//   {
+//     name: "Edge",
+//     icon: "https://cdn-icons-png.flaticon.com/128/5968/5968890.png",
+//   },
+//   {
+//     name: "Zoom",
+//     icon: "https://cdn-icons-png.flaticon.com/128/4423/4423709.png",
+//   },
+// ];
 
 const recommendedItems: RecommendedItem[] = [
   {
@@ -78,7 +78,7 @@ const recommendedItems: RecommendedItem[] = [
   },
 ];
 
-export default function AppLauncher() {
+export default function SearchPopup() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
@@ -86,7 +86,7 @@ export default function AppLauncher() {
       <PopoverTrigger asChild>
         <button className="rounded-none p-2 hover:bg-white/10">
           <Image
-            src="https://hrty.vercel.app/8yY76P"
+            src="/search.svg"
             alt="Start"
             width={24}
             height={24}
@@ -114,7 +114,7 @@ export default function AppLauncher() {
           </div>
 
           {/* Pinned Section */}
-          <div>
+          {/* <div>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-sm font-medium text-white">Pinned</h2>
               <button className="text-sm text-gray-400 hover:text-white">
@@ -142,7 +142,7 @@ export default function AppLauncher() {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Recommended Section */}
           <div>

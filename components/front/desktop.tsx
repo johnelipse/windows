@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronUp, Monitor, Wifi, Volume2, Battery } from "lucide-react";
+import { Monitor, Wifi, Volume2, Battery } from "lucide-react";
+import AppLauncher from "./pop-up-card";
+import SearchPopup from "./search-pop";
+import GooglePopover from "./google-popup";
+import WidgetDashboard from "./widget-popup";
+import MicrosoftEdgePopover from "./edge-popup";
+import Link from "next/link";
+import QuickSettings from "./more-items";
 
 const desktopIcons = [
   {
@@ -25,25 +32,9 @@ const desktopIcons = [
 
 const taskbarIcons = [
   {
-    icon: "/search.svg",
-    label: "Search",
-  },
-  {
-    icon: "https://cdn-icons-png.flaticon.com/128/10388/10388151.png",
-    label: "Search",
-  },
-
-  {
-    icon: "https://cdn-icons-png.flaticon.com/128/888/888846.png",
-    label: "Chrome",
-  },
-  {
-    icon: "https://cdn-icons-png.flaticon.com/128/5968/5968890.png",
-    label: "File Explorer",
-  },
-  {
     icon: "https://cdn-icons-png.flaticon.com/128/733/733609.png",
     label: "GitHub Desktop",
+    link: "https://github.com/",
   },
 ];
 
@@ -104,30 +95,26 @@ export default function Desktop() {
       {/* Taskbar */}
       <div className="absolute bottom-0 left-0 right-0 z-20 flex h-12 items-center justify-between bg-[#0a0a0a]/80 px-2 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          {/* Start Button */}
-          <button className="rounded-sm p-2 hover:bg-white/10">
-            <Image
-              src="https://hrty.vercel.app/8yY76P"
-              alt="Start"
-              width={24}
-              height={24}
-              className="opacity-90 hover:opacity-100"
-            />
-          </button>
-
+          <AppLauncher />
+          <SearchPopup />
+          <WidgetDashboard />
+          <GooglePopover />
+          <MicrosoftEdgePopover />
           {taskbarIcons.map((icon, index) => (
             <button
               key={index}
               className="rounded-sm p-2 hover:bg-white/10"
               title={icon.label}
             >
-              <Image
-                src={icon.icon as string}
-                alt={icon.label}
-                width={44}
-                height={44}
-                className="drop-shadow-md w-6 h-6"
-              />
+              <Link href={icon.link} target="_blank">
+                <Image
+                  src={icon.icon as string}
+                  alt={icon.label}
+                  width={44}
+                  height={44}
+                  className="drop-shadow-md w-6 h-6"
+                />
+              </Link>
             </button>
           ))}
           <button className="rounded-sm p-2 hover:bg-white/10">
@@ -143,9 +130,10 @@ export default function Desktop() {
 
         {/* System Tray */}
         <div className="flex items-center gap-1">
-          <button className="rounded-sm p-2 hover:bg-white/10">
-            <ChevronUp className="h-4 w-4 text-white opacity-90" />
-          </button>
+          <div>
+            {/* <ChevronUp className="h-4 w-4 text-white opacity-90" /> */}
+            <QuickSettings />
+          </div>
           <button className="flex items-center gap-2 rounded-sm px-2 py-1 hover:bg-white/10">
             <Monitor className="h-4 w-4 text-white opacity-90" />
             <Wifi className="h-4 w-4 text-white opacity-90" />

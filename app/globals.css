@@ -64,3 +64,8 @@
     @apply bg-background text-foreground;
   }
 }
+@media (max-width: 920px) {
+  .hide {
+    display: none;
+  }
+}

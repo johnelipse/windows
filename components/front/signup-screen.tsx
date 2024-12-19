@@ -183,16 +183,31 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { EyeIcon, EyeOffIcon, Moon, Power, RotateCcw } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  Loader2,
+  Moon,
+  Power,
+  RotateCcw,
+} from "lucide-react";
+import LoginScreen from "./login-screen";
+import { createUser } from "@/actions/userActions";
+
+export type FormDataProps = {
+  fullName: string;
+  email: string;
+  password: string;
+};
 
 export default function SignupScreen() {
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [openLogin, setOpenLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<FormDataProps>({
     fullName: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -200,11 +215,25 @@ export default function SignupScreen() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
-    // Here you would typically send the data to your backend
+    try {
+      setLoading(true);
+      await createUser(formData);
+      handleOpenLogin();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  function handleOpenLogin() {
+    setOpenLogin(true);
+  }
+  if (openLogin) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="relative flex h-screen w-full items-center justify-center overflow-hidden">
@@ -271,45 +300,35 @@ export default function SignupScreen() {
               )}
             </button>
           </div>
-
-          <div className="relative">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              placeholder="Confirm Password"
-              className="w-full rounded-sm border-none bg-black/30 px-4 py-2 pr-10 text-white placeholder-gray-300 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/50"
-              required
-            />
+          {loading ? (
             <button
               type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 focus:outline-none"
+              disabled
+              className="w-full rounded-sm bg-white/10 px-4 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20 flex gap-2 items-center justify-center"
             >
-              {showConfirmPassword ? (
-                <EyeOffIcon className="h-6 w-6" />
-              ) : (
-                <EyeIcon className="h-6 w-6" />
-              )}
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Signing...
             </button>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full rounded-sm bg-white/10 px-4 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20"
-          >
-            Sign up
-          </button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full rounded-sm bg-white/10 px-4 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20"
+            >
+              Sign up
+            </button>
+          )}
         </form>
 
-        <button className="mt-4 text-sm text-white/80 hover:underline">
+        <button
+          onClick={handleOpenLogin}
+          className="mt-4 text-sm text-white/80 hover:underline"
+        >
           Already have an account? Sign in
         </button>
       </div>
 
       {/* System controls */}
-      <div className="absolute bottom-8 right-8 flex flex-col items-end space-y-2">
+      <div className="absolute bottom-8 right-8 hide flex flex-col items-end space-y-2">
         <button className="group flex items-center space-x-3 rounded-md px-4 py-2 text-white/90 hover:bg-black/20">
           <Moon className="h-5 w-5" />
           <span className="text-sm opacity-0 transition-opacity group-hover:opacity-100">

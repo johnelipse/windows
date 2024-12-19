@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { useState } from 'react'
 // import Image from 'next/image'
 // import { EyeIcon, EyeOffIcon } from 'lucide-react'
@@ -52,11 +53,58 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { EyeIcon, EyeOffIcon, Moon, Power, RotateCcw } from "lucide-react";
+import { Loader2, Lock, Moon, Power, RotateCcw } from "lucide-react";
+import SignupScreen from "./signup-screen";
+import PasswordInput from "../formInputs/passwordInput";
+import { useForm } from "react-hook-form";
+import { loginAction } from "@/actions/userActions";
+import Desktop from "./desktop";
+
+export type LoginProps = {
+  get: any;
+  password: string;
+};
 
 export default function LoginScreen() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginProps>();
+
+  const [openSignup, setOpenSignup] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
+  const [openDesktop, setOpenDesktop] = useState(false);
+
+  if (openSignup) {
+    return <SignupScreen />;
+  }
+
+  if (openDesktop) {
+    return <Desktop />;
+  }
+
+  function handleSignup() {
+    setOpenSignup(true);
+  }
+
+  async function submit(data: LoginProps) {
+    try {
+      setLoading(true);
+      const res = await loginAction(data);
+      if (res && res.status == 500) {
+        setErr("Wrong password, please try again.");
+      }
+      reset();
+      setOpenDesktop(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="relative flex h-screen w-full items-center justify-center overflow-hidden">
@@ -73,7 +121,10 @@ export default function LoginScreen() {
       <div className="absolute inset-0 bg-black/55 backdrop-blur-lg" />
 
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center space-y-4">
+      <form
+        onSubmit={handleSubmit(submit)}
+        className="relative z-10 flex flex-col items-center space-y-4"
+      >
         {/* Avatar */}
         <div className="flex h-32 w-32 items-center justify-center rounded-full bg-white/90 shadow-lg">
           <svg
@@ -90,39 +141,45 @@ export default function LoginScreen() {
 
         {/* Password input */}
         <div className="relative mt-4 w-80">
-          <input
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full rounded-sm border-none bg-black/30 px-4 py-2 pr-10 text-white placeholder-gray-300 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-white/50"
+          <PasswordInput
+            register={register}
+            errors={errors}
+            name="password"
+            icon={Lock}
+            placeholder="password"
           />
-          <button
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 focus:outline-none"
-          >
-            {showPassword ? (
-              <EyeOffIcon className="h-6 w-6" />
-            ) : (
-              <EyeIcon className="h-6 w-6" />
-            )}
-          </button>
+          {err && <span className="text-red-600 text-sm">{err}</span>}
         </div>
 
         {/* Sign In Button */}
-        <button className="mt-4 w-80 rounded-sm bg-white/10 px-4 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20">
-          Sign in
-        </button>
-
+        {loading ? (
+          <button
+            type="button"
+            disabled
+            className="w-full rounded-sm bg-white/10 px-4 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20 flex gap-2 items-center justify-center"
+          >
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Signing...
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="w-full rounded-sm bg-white/10 px-4 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20"
+          >
+            Sign in
+          </button>
+        )}
         {/* Additional Options */}
         <div className="mt-4 flex space-x-4 text-sm text-white/80">
           <button className="hover:underline">Forgot password?</button>
-          <button className="hover:underline">Other sign-in options</button>
+          <button onClick={handleSignup} className="hover:underline">
+            Create Account
+          </button>
         </div>
-      </div>
+      </form>
 
       {/* System controls */}
-      <div className="absolute bottom-8 right-8 flex flex-col items-end space-y-2">
+      <div className="absolute bottom-8 right-8 hide flex flex-col items-end space-y-2">
         <button className="group flex items-center space-x-3 rounded-md px-4 py-2 text-white/90 hover:bg-black/20">
           <Moon className="h-5 w-5" />
           <span className="text-sm opacity-0 transition-opacity group-hover:opacity-100">

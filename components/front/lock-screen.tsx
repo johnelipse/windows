@@ -43,17 +43,30 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import WeatherCard from "./home-card";
+import LoginScreen from "./login-screen";
 
 export default function LockScreen() {
   const [time, setTime] = useState(new Date());
+  const [openLogin, setOpenLogin] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  function handleOpenLogin() {
+    setOpenLogin(true);
+  }
+  if (openLogin) {
+    return <LoginScreen />;
+  }
+
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div
+      onClick={handleOpenLogin}
+      // role="button"
+      className="relative h-screen w-full overflow-hidden"
+    >
       <Image
         src="https://hrty.vercel.app/NPih2Y"
         alt="Windows 11 Wallpaper"
@@ -73,12 +86,13 @@ export default function LockScreen() {
           })}
         </div>
       </div>
-      <div className="absolute bottom-8 left-8 right-8 items-center grid grid-cols-4 gap-8 text-white">
-        {/* <button className="rounded-full bg-black bg-opacity-50 px-8 py-2 text-sm font-light transition-colors hover:bg-opacity-70">
-          Press any key to continue
-        </button> */}
+      <div className="absolute  bottom-8 left-8 right-8 items-center  hidden md:grid grid-cols-4 gap-8 text-white">
         <WeatherCard />
         <WeatherCard />
+        <WeatherCard />
+        <WeatherCard />
+      </div>
+      <div className="absolute bottom-8 md:hidden left-4 right-4 items-center grid grid-cols-2 gap-8 text-white">
         <WeatherCard />
         <WeatherCard />
       </div>
