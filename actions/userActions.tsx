@@ -101,14 +101,13 @@ export async function loginAction(data: LoginProps) {
   const email = await getUserEmail();
   const newEmail = email.email;
 
-  if (!email) {
-    return { error: "Please start the SignUp process again", status: 409 };
-  }
-
   try {
     const user = await db.user.findUnique({
       where: { email: newEmail },
     });
+    if (!user) {
+      return { error: "Please start the SignUp process again", status: 409 };
+    }
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return { error: "Invalid password", status: 500 };
