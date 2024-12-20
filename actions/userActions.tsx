@@ -62,6 +62,23 @@ export async function createUser(formData: FormDataProps) {
   }
 }
 
+// export async function getUserEmail() {
+//   const cookieStore = await cookies();
+//   const userCookie = cookieStore.get("user");
+
+//   if (!userCookie) {
+//     return { error: "User cookie not found" };
+//   }
+
+//   try {
+//     const userData = JSON.parse(userCookie.value);
+//     return { email: userData.email };
+//   } catch (error) {
+//     console.error("Error parsing user cookie:", error);
+//     return { error: "Invalid user cookie format" };
+//   }
+// }
+
 export async function getUserEmail() {
   const cookieStore = await cookies();
   const userCookie = cookieStore.get("user");
@@ -79,39 +96,81 @@ export async function getUserEmail() {
   }
 }
 
-export async function getUser() {
-  const cookieStore = await cookies();
-  const userCookie = cookieStore.get("user");
+// export async function loginAuth(data: LoginProps) {
+//   const { password } = data;
+//   const email = await getUserEmail();
+//   const newEmail = email.email;
+//   if (!email) {
+//     return { error: "Please start the login process again" };
+//   }
 
-  if (!userCookie) {
-    return { error: "User cookie not found" };
+//   if (!password) {
+//     return { error: "Password is required" };
+//   }
+
+//   try {
+//     const user = await db.user.findUnique({
+//       where: { email: newEmail },
+//     });
+
+//     if (!user || !(await bcrypt.compare(password, user.password))) {
+//       return { error: "Invalid password", status: 500 };
+//     }
+
+//     // Set user session cookie
+//     (
+//       await // Set user session cookie
+//       cookies()
+//     ).set(
+//       "user",
+//       JSON.stringify({
+//         id: user.id,
+//         fullName: user.fullName,
+//         email: user.email,
+//       }),
+//       {
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === "production",
+//         maxAge: 60 * 60 * 24 * 7, // 1 week
+//       }
+//     );
+//   } catch (error) {
+//     console.error("Login failed:", error);
+//     return { error: "An error occurred during login. Please try again." };
+//   }
+// }
+
+export async function loginAuth(data: LoginProps) {
+  const { password } = data;
+  const emailResult = await getUserEmail();
+
+  if ("error" in emailResult) {
+    return { error: emailResult.error, status: 400 };
+  }
+
+  const email = emailResult.email;
+
+  if (!email) {
+    return { error: "Please start the login process again", status: 400 };
+  }
+
+  if (!password) {
+    return { error: "Password is required", status: 400 };
   }
 
   try {
-    const userData = JSON.parse(userCookie.value);
-    return { data: userData };
-  } catch (error) {
-    console.error("Error parsing user cookie:", error);
-    return { error: "Invalid user cookie format" };
-  }
-}
-
-export async function loginAction(data: LoginProps) {
-  try {
-    const { password } = data;
-    const email = await getUserEmail();
-    const newEmail = email.email;
-
-    if (!email) {
-      return { error: "Please start the SignUp process again", status: 409 };
-    }
-
     const user = await db.user.findUnique({
-      where: { email: newEmail },
+      where: { email },
     });
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return { error: "Invalid password", status: 500 };
+    if (!user) {
+      return { error: "User not found", status: 404 };
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return { error: "Invalid password", status: 401 };
     }
 
     // Set user session cookie
@@ -131,8 +190,13 @@ export async function loginAction(data: LoginProps) {
         maxAge: 60 * 60 * 24 * 7, // 1 week
       }
     );
+
+    return { success: true, status: 200 };
   } catch (error) {
     console.error("Login failed:", error);
-    return { error: "An error occurred during login. Please try again." };
+    return {
+      error: "An error occurred during login. Please try again.",
+      status: 500,
+    };
   }
 }

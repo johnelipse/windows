@@ -51,15 +51,14 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Loader2, Lock, Moon, Power, RotateCcw } from "lucide-react";
 import SignupScreen from "./signup-screen";
 import PasswordInput from "../formInputs/passwordInput";
 import { useForm } from "react-hook-form";
-import { getUser, loginAction } from "@/actions/userActions";
+import { loginAuth } from "@/actions/userActions";
 import Desktop from "./desktop";
-import toast from "react-hot-toast";
 
 export type LoginProps = {
   get: any;
@@ -78,21 +77,21 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [openDesktop, setOpenDesktop] = useState(false);
-  const [newData, setNewData] = useState({});
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userCookie = await getUser();
-        if (userCookie) {
-          setNewData(userCookie);
-        }
-      } catch (error) {
-        console.error("Error fetching or parsing user data:", error);
-      }
-    };
+  // const [newData, setNewData] = useState<string>("");
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const userCookie = await getUserEmail();
+  //       if (userCookie) {
+  //         setNewData(userCookie.email);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching or parsing user data:", error);
+  //     }
+  //   };
 
-    fetchUserData();
-  }, []);
+  //   fetchUserData();
+  // }, []);
 
   if (openSignup) {
     return <SignupScreen />;
@@ -106,23 +105,42 @@ export default function LoginScreen() {
     setOpenSignup(true);
   }
 
+  // async function submit(data: LoginProps) {
+  //   // if (newData) {
+  //   //   toast.error("Please signup first to login.......");
+  //   //   return <LoginScreen />;
+  //   // }
+  //   try {
+  //     setLoading(true);
+  //     // const res = await loginAction(data);
+  //     const res = await loginAuth(data);
+  //     if (res && res.status == 500) {
+  //       setErr("Wrong password, please try again.");
+  //     }
+  //     reset();
+  //     setOpenDesktop(true);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
   async function submit(data: LoginProps) {
-    if (newData) {
-      try {
-        setLoading(true);
-        const res = await loginAction(data);
-        if (res && res.status == 500) {
-          setErr("Wrong password, please try again.");
-        }
+    try {
+      setLoading(true);
+      const res = await loginAuth(data);
+      if (res.error) {
+        setErr(res.error);
+      } else if (res.success) {
         reset();
         setOpenDesktop(true);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
       }
-    } else {
-      toast.error("Please start with the SignUp process...");
+    } catch (error) {
+      console.error(error);
+      setErr("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
