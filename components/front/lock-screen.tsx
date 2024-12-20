@@ -92,7 +92,7 @@ export default function LockScreen() {
         <WeatherCard />
         <WeatherCard />
       </div>
-      <div className="absolute bottom-8 md:hidden left-4 right-4 items-center grid grid-cols-2 gap-8 text-white">
+      <div className="absolute bottom-28 md:hidden left-4 right-4 items-center grid grid-cols-2 gap-8 text-white">
         <WeatherCard />
         <WeatherCard />
       </div>
