@@ -62,22 +62,22 @@ export async function createUser(formData: FormDataProps) {
   }
 }
 
-// export async function getUserEmail() {
-//   const cookieStore = await cookies();
-//   const userCookie = cookieStore.get("user");
+export async function getUser() {
+  const cookieStore = await cookies();
+  const userCookie = cookieStore.get("user");
 
-//   if (!userCookie) {
-//     return { error: "User cookie not found" };
-//   }
+  if (!userCookie) {
+    return { error: "User cookie not found" };
+  }
 
-//   try {
-//     const userData = JSON.parse(userCookie.value);
-//     return { email: userData.email };
-//   } catch (error) {
-//     console.error("Error parsing user cookie:", error);
-//     return { error: "Invalid user cookie format" };
-//   }
-// }
+  try {
+    const userData = JSON.parse(userCookie.value);
+    return { data: userData.fullName };
+  } catch (error) {
+    console.error("Error parsing user cookie:", error);
+    return { error: "Invalid user cookie format" };
+  }
+}
 
 export async function getUserEmail() {
   const cookieStore = await cookies();
@@ -95,50 +95,6 @@ export async function getUserEmail() {
     return { error: "Invalid user cookie format" };
   }
 }
-
-// export async function loginAuth(data: LoginProps) {
-//   const { password } = data;
-//   const email = await getUserEmail();
-//   const newEmail = email.email;
-//   if (!email) {
-//     return { error: "Please start the login process again" };
-//   }
-
-//   if (!password) {
-//     return { error: "Password is required" };
-//   }
-
-//   try {
-//     const user = await db.user.findUnique({
-//       where: { email: newEmail },
-//     });
-
-//     if (!user || !(await bcrypt.compare(password, user.password))) {
-//       return { error: "Invalid password", status: 500 };
-//     }
-
-//     // Set user session cookie
-//     (
-//       await // Set user session cookie
-//       cookies()
-//     ).set(
-//       "user",
-//       JSON.stringify({
-//         id: user.id,
-//         fullName: user.fullName,
-//         email: user.email,
-//       }),
-//       {
-//         httpOnly: true,
-//         secure: process.env.NODE_ENV === "production",
-//         maxAge: 60 * 60 * 24 * 7, // 1 week
-//       }
-//     );
-//   } catch (error) {
-//     console.error("Login failed:", error);
-//     return { error: "An error occurred during login. Please try again." };
-//   }
-// }
 
 export async function loginAuth(data: LoginProps) {
   const { password } = data;

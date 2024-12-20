@@ -51,13 +51,13 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Loader2, Lock, Moon, Power, RotateCcw } from "lucide-react";
 import SignupScreen from "./signup-screen";
 import PasswordInput from "../formInputs/passwordInput";
 import { useForm } from "react-hook-form";
-import { loginAuth } from "@/actions/userActions";
+import { getUser, loginAuth } from "@/actions/userActions";
 import Desktop from "./desktop";
 
 export type LoginProps = {
@@ -77,21 +77,21 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [openDesktop, setOpenDesktop] = useState(false);
-  // const [newData, setNewData] = useState<string>("");
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const userCookie = await getUserEmail();
-  //       if (userCookie) {
-  //         setNewData(userCookie.email);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching or parsing user data:", error);
-  //     }
-  //   };
+  const [newData, setNewData] = useState("");
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userCookie = await getUser();
+        if (userCookie) {
+          setNewData(userCookie.data);
+        }
+      } catch (error) {
+        console.error("Error fetching or parsing user data:", error);
+      }
+    };
 
-  //   fetchUserData();
-  // }, []);
+    fetchUserData();
+  }, []);
 
   if (openSignup) {
     return <SignupScreen />;
@@ -175,7 +175,11 @@ export default function LoginScreen() {
         </div>
 
         {/* Username */}
-        <h2 className="text-2xl font-light text-white">testingdocs</h2>
+        {newData ? (
+          <h2 className="text-2xl font-light text-white">{newData}</h2>
+        ) : (
+          <h2 className="text-2xl font-light text-white">My Computer</h2>
+        )}
 
         {/* Password input */}
         <div className="relative mt-4 w-80">
