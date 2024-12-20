@@ -131,7 +131,7 @@ export default function LoginScreen() {
       setLoading(true);
       const res = await loginAuth(data);
       if (res.error) {
-        setErr(res.error);
+        setErr("Invalid password, please try again.");
       } else if (res.success) {
         reset();
         setOpenDesktop(true);
