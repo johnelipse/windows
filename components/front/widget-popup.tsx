@@ -13,7 +13,7 @@ import Image from "next/image";
 export default function WidgetDashboard() {
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger className="hidden  md:block" asChild>
         <button className="rounded-none p-2 hover:bg-white/10">
           <Image
             src="https://cdn-icons-png.flaticon.com/128/10388/10388151.png"
@@ -40,13 +40,13 @@ export default function WidgetDashboard() {
             <CardContent>
               <div className="flex items-center gap-2">
                 <div className="text-cyan-400">
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-6 w-6"
-                    fill="currentColor"
-                  >
-                    <path d="M12 2L1 21h22L12 2zm0 3.516L20.719 19H3.281L12 5.516z" />
-                  </svg>
+                  <Image
+                    src="https://cdn-icons-png.flaticon.com/128/3459/3459528.png"
+                    alt="Start"
+                    width={24}
+                    height={24}
+                    className="opacity-90 hover:opacity-100 animate-spin"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export default function WidgetDashboard() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <Sun className="h-8 w-8 text-yellow-500" />
+                  <Sun className="h-8 w-8 text-yellow-500 animate-pulse" />
                   <div className="flex flex-col">
                     <span className="text-sm">🏢 Toronto, Ontario</span>
                     <span className="text-2xl font-bold">72°F</span>

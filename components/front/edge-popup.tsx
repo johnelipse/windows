@@ -26,7 +26,7 @@ import Image from "next/image";
 export default function MicrosoftEdgePopover() {
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger className="hidden  md:block" asChild>
         <button className="rounded-none p-2 hover:bg-white/10">
           <Image
             src="https://cdn-icons-png.flaticon.com/128/5968/5968890.png"

@@ -95,7 +95,7 @@ export default function AppLauncher() {
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="mb-4 ml-10 w-[640px] border-0 bg-[#1F1F1F]/95 p-0 shadow-2xl"
+        className="mb-4 ml-1 md:ml-10 w-[325px] md:w-[640px] border-0 bg-[#1F1F1F]/95 p-0 shadow-2xl"
         side="bottom"
         sideOffset={0}
         align="end"
@@ -121,7 +121,7 @@ export default function AppLauncher() {
                 All Apps &gt;
               </button>
             </div>
-            <div className="grid grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
               {pinnedApps.map((app, index) => (
                 <button
                   key={index}

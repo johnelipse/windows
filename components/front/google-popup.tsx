@@ -14,7 +14,7 @@ import Image from "next/image";
 export default function GooglePopover() {
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger className="hidden  md:block" asChild>
         <button className="rounded-none p-2 hover:bg-white/10">
           <Image
             src="https://cdn-icons-png.flaticon.com/128/888/888846.png"
@@ -31,7 +31,7 @@ export default function GooglePopover() {
       >
         <div className="bg-[#060042ff] flex justify-end w-full px-2 py-1">
           <button className="text-white text-end">
-            <X className="w-4 h-4"/>
+            <X className="w-4 h-4" />
           </button>
         </div>
         <Card className="border-0 shadow-none">

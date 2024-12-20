@@ -83,8 +83,8 @@ export default function SearchPopup() {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <button className="rounded-none p-2 hover:bg-white/10">
+      <PopoverTrigger className="hidden  md:block" asChild>
+        <button className="rounded-none  p-2 hover:bg-white/10">
           <Image
             src="/search.svg"
             alt="Start"
